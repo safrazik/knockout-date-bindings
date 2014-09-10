@@ -22,6 +22,27 @@
         factory(ko, moment);
     }
 }(function (ko, moment) {
+
+    function getDateFormat(element, defaultDateFormat){
+        var dateFormat = defaultDateFormat, type = element.type;
+        if (type == 'date') {
+            dateFormat = 'YYYY-MM-DD';
+        }
+        else if (type == 'datetime-local' || type == 'datetime') {
+            dateFormat = 'YYYY-MM-DDThh:mm';
+        }
+        else if (type == 'month') {
+            dateFormat = 'YYYY-MM';
+        }
+        else if (type == 'time') {
+            dateFormat = 'hh:mm';
+        }
+        else if(type == 'week'){
+            dateFormat = 'GGGG-[W]WW';
+        }
+        return dateFormat;
+    }
+
     ko.bindingHandlers.date = {
         init: function(element, valueAccessor, allBindingsAccessor) {
             element.onchange = function() {
@@ -30,29 +51,13 @@
                         ? ko.utils.unwrapObservable(allBindingsAccessor().dateFormat) : 'L';
                 var d;
                 if (element.tagName == 'INPUT') {
-                    var type = element.type;
-                    if (type == 'date') {
-                        dateFormat = 'YYYY-MM-DD';
-                    }
-                    else if (type == 'time') {
-                        dateFormat = 'hh:mm';
-                    }
-                    else if (type == 'datetime-local') {
-                        dateFormat = 'YYYY-MM-DDThh:mm';
-                    }
-                    else if (type == 'month') {
-                        dateFormat = 'YYYY-MM';
-                    }
+                    dateFormat = getDateFormat(element, dateFormat);
                     d = moment(element.value, dateFormat);
                 }
                 else {
                     d = moment(element.textContent, dateFormat);
                 }
                 if (d) {
-                    // var newD = moment();
-                    // d.hour(newD.hour());
-                    // d.minute(newD.minute());
-                    // d.second(newD.second());
                     if(typeof value === "function"){
                       value(d.toDate());
                     }
@@ -86,14 +91,11 @@
                 var dateFormat = allBindingsAccessor().dateFormat
                         ? ko.utils.unwrapObservable(allBindingsAccessor().dateFormat) : 'L';
                 if (element.tagName == 'INPUT') {
-                  if(valueUnwrapped instanceof Date && valueUnwrapped.getTime() === 0){
-                    element.value = '';
-                  }
-                  else if (element.type == 'date') {
-                        dateFormat = 'YYYY-MM-DD';
-                        element.value = moment(valueUnwrapped).format(dateFormat);
+                    if(valueUnwrapped instanceof Date && valueUnwrapped.getTime() === 0){
+                        element.value = '';
                     }
                     else {
+                        dateFormat = getDateFormat(element, dateFormat);
                         element.value = moment(valueUnwrapped).format(dateFormat);
                     }
                 }
