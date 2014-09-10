@@ -49,10 +49,10 @@
                     d = moment(element.textContent, dateFormat);
                 }
                 if (d) {
-                    var newD = moment();
-                    d.hour(newD.hour());
-                    d.minute(newD.minute());
-                    d.second(newD.second());
+                    // var newD = moment();
+                    // d.hour(newD.hour());
+                    // d.minute(newD.minute());
+                    // d.second(newD.second());
                     if(typeof value === "function"){
                       value(d.toDate());
                     }
