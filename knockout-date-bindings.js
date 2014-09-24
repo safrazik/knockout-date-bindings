@@ -112,4 +112,5 @@
             }
         }
     };
+    return {}; // let require js work fine
 }));
