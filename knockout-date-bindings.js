@@ -23,8 +23,8 @@
     }
 }(function (ko, moment) {
 
-    function getDateFormat(element, defaultDateFormat){
-        var dateFormat = defaultDateFormat, type = element.type;
+    function getDateFormat(type, defaultDateFormat){
+        var dateFormat = defaultDateFormat;
         if (type == 'date') {
             dateFormat = 'YYYY-MM-DD';
         }
@@ -51,8 +51,18 @@
                         ? ko.utils.unwrapObservable(allBindingsAccessor().dateFormat) : 'L';
                 var d;
                 if (element.tagName == 'INPUT') {
-                    dateFormat = getDateFormat(element, dateFormat);
+                    var type = element.type;
+                    dateFormat = getDateFormat(type, dateFormat);
                     d = moment(element.value, dateFormat);
+                    if(type =='date' || type == 'month' || type == 'week'){
+                      var newD = moment();
+                      d.hour(newD.hour());
+                      d.minute(newD.minute());
+                      d.second(newD.second());
+                      if(type == 'month' || type == 'week'){
+                        d.date(newD.date());
+                      }
+                    }
                 }
                 else {
                     d = moment(element.textContent, dateFormat);
@@ -95,7 +105,7 @@
                         element.value = '';
                     }
                     else {
-                        dateFormat = getDateFormat(element, dateFormat);
+                        dateFormat = getDateFormat(element.type, dateFormat);
                         element.value = moment(valueUnwrapped).format(dateFormat);
                     }
                 }
