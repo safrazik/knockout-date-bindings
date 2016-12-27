@@ -29,7 +29,7 @@
             dateFormat = 'YYYY-MM-DD';
         }
         else if (type == 'datetime-local' || type == 'datetime') {
-            dateFormat = 'YYYY-MM-DDThh:mm';
+            dateFormat = 'YYYY-MM-DDTHH:mm';
         }
         else if (type == 'month') {
             dateFormat = 'YYYY-MM';
